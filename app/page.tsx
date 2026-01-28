@@ -22,7 +22,8 @@ export default async function GuestHome() {
   }
 
   if (session) {
-    return <pre>{JSON.stringify(session.user, null, 2)}</pre>;
+    return <pre>{JSON.stringify((session as any).user, null, 2)}</pre>; 
+    //return <pre>{JSON.stringify(session.user, null, 2)}</pre>;
   }
 
   return (
