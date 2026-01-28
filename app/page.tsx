@@ -4,28 +4,27 @@ import { redirect } from "next/navigation";
 
 export default async function GuestHome() {
   const session = await auth0.getSession();
-  
+
   // 1. If session exists, determine the correct landing spot
-  if (session) {
+  if (session && session.user) {
     const user = session.user;
-    console.log("user is: ", user);
-    // Replace the URL below with the exact namespace you used in your Auth0 Action
-    const roles = user["https://fin-and-fillet.com/roles"] as string[] || [];
+    
+    // Log for server-side debugging (visible in PM2 logs)
+    console.log("Session detected for user:", user.email);
+
+    // Replace the URL below with the exact namespace used in your Auth0 Action
+    const roles = (user["https://fin-and-fillet.com/roles"] as string[]) || [];
     
     console.log("DEBUG: Your roles are:", roles);
 
     if (roles.includes("Admin")) {
-      redirect("/admin/settings"); // Send Admins to their settings
+      return redirect("/admin/settings"); // Use return to stop execution
     } else {
-      redirect("/dashboard/profile"); // Send standard Members to their profile
+      return redirect("/dashboard/profile"); 
     }
   }
 
-  if (session) {
-    return <pre>{JSON.stringify((session as any).user, null, 2)}</pre>; 
-    //return <pre>{JSON.stringify(session.user, null, 2)}</pre>;
-  }
-
+  // 2. If no session, show the Public Landing Page
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start border-x border-zinc-100 dark:border-zinc-900">
