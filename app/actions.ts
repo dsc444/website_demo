@@ -5,7 +5,7 @@ import path from "path";
 import { revalidatePath } from "next/cache";
 import Stripe from "stripe";
 
-const dbPath = path.join(process.cwd(), "app", "db.json");
+const dbPath = path.join(process.cwd(), "db.json");
 const tempstripe = process.env.STRIPE_SECRET_KEY;
 
 if (!tempstripe) {
