@@ -1,29 +1,11 @@
 import Image from "next/image";
 import { auth0 } from "@/app/lib/auth0";
-import { redirect } from "next/navigation";
 
 export default async function GuestHome() {
   const session = await auth0.getSession();
   
-  // 1. If session exists, determine the correct landing spot
-  if (session) {
-    const user = session.user;
-    console.log("user is: ", user);
-    // Replace the URL below with the exact namespace you used in your Auth0 Action
-    const roles = user["https://fin-and-fillet.com/roles"] as string[] || [];
-    
-    console.log("DEBUG: Your roles are:", roles);
-
-    if (roles.includes("Admin")) {
-      redirect("/admin/settings"); // Send Admins to their settings
-    } else {
-      redirect("/dashboard/profile"); // Send standard Members to their profile
-    }
-  }
-
-  if (session) {
-    return <pre>{JSON.stringify(session.user, null, 2)}</pre>;
-  }
+  // If they are already logged in, you might want to auto-redirect them to the dashboard
+  // if (session) redirect("/dashboard");
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -58,6 +40,7 @@ export default async function GuestHome() {
             </span>
           </p>
 
+          {/* Teaser Inventory - Blurred for Guests */}
           <div className="w-full space-y-3 opacity-50 grayscale select-none">
             <div className="flex justify-between border-b pb-2">
               <span>Wild King Salmon</span>

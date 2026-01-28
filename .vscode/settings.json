@@ -1,0 +1,8 @@
+{
+  "github.copilot.enable": { "*": false }, // If using multiple AIs
+  "google.cloud.code.gemini.enable": true,
+  "google.cloud.code.gemini.cloudProject": "nextjs-boilerplate",
+  "files.exclude": {
+    "**/confidential/**": true
+  }
+}
