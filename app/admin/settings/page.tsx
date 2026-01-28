@@ -5,7 +5,7 @@ import FishEditor from "../FishEditor";
 import AddFishForm from "./AddFishForm"; // We will create this next
 
 export default async function AdminSettings() {
-  const dbPath = path.join(process.cwd(), "app", "db.json");
+  const dbPath = path.join(process.cwd(), "db.json");
   const fileData = await fs.readFile(dbPath, "utf-8").catch(() => "{}");
   const data = JSON.parse(fileData);
   const savedPrices = data.prices || {};
