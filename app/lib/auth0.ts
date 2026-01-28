@@ -13,8 +13,11 @@ export const auth0 = new Auth0Client({
     // Log this to your terminal during login to see if it sees the roles
     console.log("ID Token Claims:", idToken);
 
-    if (idToken && idToken[`${namespace}/roles`]) {
-      session.user[`${namespace}/roles`] = idToken[`${namespace}/roles`];
+    //if (idToken && idToken[`${namespace}/roles`]) {
+    //  session.user[`${namespace}/roles`] = idToken[`${namespace}/roles`];
+    //}
+    if (idToken && (idToken as any)[`${namespace}/roles`]) {
+      (session.user as any)[`${namespace}/roles`] = (idToken as any)[`${namespace}/roles`];
     }
     
     return session;
