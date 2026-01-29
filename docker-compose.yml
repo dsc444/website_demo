@@ -1,6 +1,8 @@
 services:
   nextjs-app:
     build: .
+    volumes:
+      - ./db.json:/app/db.json
     ports:
       - "3000:3000"
     env_file:
