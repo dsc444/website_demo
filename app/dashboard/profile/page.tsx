@@ -13,9 +13,10 @@ export default async function CustomerDashboard() {
 
   let myNote = "";
   let livePrices: Record<string, string> = {};
+  const dbPath = path.join(process.cwd(), "db.json");
 
   try {
-    const dbPath = path.join(process.cwd(), "db.json");
+    
     const fileContent = await fs.readFile(dbPath, "utf-8");
     const data = JSON.parse(fileContent);
 
