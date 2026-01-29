@@ -15,7 +15,7 @@ export default async function CustomerDashboard() {
   let livePrices: Record<string, string> = {};
 
   try {
-    const dbPath = path.join(process.cwd(), "app", "db.json");
+    const dbPath = path.join(process.cwd(), "db.json");
     const fileContent = await fs.readFile(dbPath, "utf-8");
     const data = JSON.parse(fileContent);
 
