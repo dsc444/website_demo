@@ -171,19 +171,22 @@ export async function createOrder(orderData: any) {
 }
 
 export async function deleteItem(id: string) {
-  // Use the root path we fixed earlier for the Hetzner/Docker setup
-  const filePath = path.join(process.cwd(), 'db.json'); 
+const dbPath = path.join(process.cwd(), "db.json");
   
-  // 1. Read existing data
-  const fileData = await fs.readFile(filePath, 'utf8');
-  const data = JSON.parse(fileData);
+  try {
+    const fileData = await fs.readFile(dbPath, "utf-8");
+    const data = JSON.parse(fileData);
 
-  // 2. Filter out the item (The DE way: immutable update)
-  const updatedItems = data.items.filter((item: any) => item.id !== id);
-
-  // 3. Write back to the server disk
-  await fs.writeFile(filePath, JSON.stringify({ ...data, items: updatedItems }, null, 2));
-
-  // 4. Tell Next.js to refresh the page cache
-  revalidatePath('/admin/settings');
+    // FIX: Check if prices exists before trying to modify it
+    if (data && data.prices) {
+      delete data.prices[id];
+      
+      await fs.writeFile(dbPath, JSON.stringify(data, null, 2));
+      revalidatePath("/admin");
+    } else {
+      console.error("DEBUG: 'prices' object not found in db.json");
+    }
+  } catch (error) {
+    console.error("Failed to delete fish:", error);
+  }
 }
