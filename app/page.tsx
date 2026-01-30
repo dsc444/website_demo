@@ -31,11 +31,11 @@ export default async function GuestHome() {
         
         <div className="flex w-full justify-between items-center">
           <Image
-            className="dark:invert"
-            src="/next.svg"
-            alt="Fin & Fillet Logo"
-            width={100}
-            height={20}
+            className="hover:rotate-12 transition-transform duration-500"
+            src="/insane-logo.png"
+            alt="New Insane Logo"
+            width={150}
+            height={150}
             priority
           />
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 border border-zinc-200 px-2 py-1 rounded">
@@ -46,26 +46,26 @@ export default async function GuestHome() {
         <div className="flex flex-col items-center gap-8 text-center sm:items-start sm:text-left">
           <div className="space-y-2">
             <h1 className="text-4xl font-light tracking-tight text-black dark:text-zinc-50">
-              Fin & <span className="font-serif italic text-blue-600">Fillet</span>
+              Darragh <span className="font-serif italic text-blue-600">Has lost his mind</span>
             </h1>
-            <p className="text-sm uppercase tracking-widest text-zinc-500">Premium Seafood Wholesalers</p>
+            <p className="text-sm uppercase tracking-widest text-zinc-500">Welcome to the madness</p>
           </div>
           
           <p className="max-w-md text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
-            Our daily catch is sourced directly from sustainable North Atlantic fisheries. 
+            This was a fish shop when first designed and now it is a disaster. 
             <span className="block mt-4 font-medium text-black dark:text-white">
-              Login to view today's market rates and place wholesale orders.
+              Login to view objects and such.
             </span>
           </p>
 
           <div className="w-full space-y-3 opacity-50 grayscale select-none">
             <div className="flex justify-between border-b pb-2">
-              <span>Wild King Salmon</span>
-              <span className="blur-sm">$XX.XX / lb</span>
+              <span>I am hiding. Spooky</span>
+              <span className="blur-sm">$XX.XX / kg</span>
             </div>
             <div className="flex justify-between border-b pb-2">
-              <span>Hokkaido Scallops</span>
-              <span className="blur-sm">$XX.XX / lb</span>
+              <span>Oooooo what's this secret thing?</span>
+              <span className="blur-sm">$XX.XX / kg</span>
             </div>
           </div>
         </div>
@@ -87,7 +87,7 @@ export default async function GuestHome() {
         </div>
 
         <footer className="mt-16 text-xs text-zinc-400">
-          © 2026 Fin & Fillet Market. Licensed for Wholesale Only.
+          © 2026 Darragh's Data Extravaganza. Seller of objects.
         </footer>
       </main>
     </div>
