@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fin & Fillet | Market",
-  description: "Fresh seafood market terminal",
+  title: "Darragh's Data | Extravaganza",
+  description: "Fresh data market land",
 };
 
 export default function RootLayout({

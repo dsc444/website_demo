@@ -32,7 +32,7 @@ export default async function CustomerDashboard() {
     <div className="space-y-8 p-6">
       <section className="flex flex-col gap-2">
         <h1 className="text-3xl font-serif text-zinc-900 dark:text-white">
-          Welcome, muhahahaha <span className="italic">{user?.given_name || "Partner"}</span>
+          Why hello there <span className="italic">{user?.given_name || "Partner"}</span>
         </h1>
         <p className="text-zinc-500 text-sm tracking-wide uppercase">
           Care to purchase our wears?? — {new Date().toLocaleDateString()}

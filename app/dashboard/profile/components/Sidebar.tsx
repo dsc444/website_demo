@@ -16,7 +16,7 @@ export default function Sidebar() {
     <div className="w-64 min-h-screen bg-zinc-950 border-r border-zinc-800 p-6 flex flex-col">
       {/* Brand/Logo Section */}
       <div className="mb-10 px-4">
-        <h2 className="text-emerald-500 font-black tracking-tighter text-xl italic">FIN & FILLET</h2>
+        <h2 className="text-emerald-500 font-black tracking-tighter text-xl italic">Data Extravaganza</h2>
       </div>
 
       {/* Navigation Section */}

@@ -46,13 +46,13 @@ export default async function GuestHome() {
         <div className="flex flex-col items-center gap-8 text-center sm:items-start sm:text-left">
           <div className="space-y-2">
             <h1 className="text-4xl font-light tracking-tight text-black dark:text-zinc-50">
-              Darragh <span className="font-serif italic text-blue-600">Has lost his mind</span>
+              Darragh, <span className="font-serif italic text-blue-600">Has lost his mind</span>
             </h1>
             <p className="text-sm uppercase tracking-widest text-zinc-500">Welcome to the madness</p>
           </div>
           
           <p className="max-w-md text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
-            This was a fish shop when first designed and now it is a disaster. 
+            This was a fish shop when first designed and now it's a disaster. 
             <span className="block mt-4 font-medium text-black dark:text-white">
               Login to view objects and such.
             </span>
