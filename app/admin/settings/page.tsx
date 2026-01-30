@@ -12,7 +12,7 @@ export default async function AdminSettings() {
   const savedPrices = data.prices || {};
 
   // Combine hardcoded defaults with any new ones from the JSON
-  const baseFish = ["Halibut", "Salmon", "Cod", "Turbot"];
+  const baseFish = ["base"];
   const dbFish = Object.keys(savedPrices);
   const fullFishList = Array.from(new Set([...baseFish, ...dbFish]));
 

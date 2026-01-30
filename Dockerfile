@@ -3,8 +3,8 @@ FROM node:20-alpine AS base
 # 1. Install dependencies only when needed
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
-WORKDIR /app
 RUN npm install -g npm@11.8.0
+WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
