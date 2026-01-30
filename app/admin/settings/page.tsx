@@ -2,10 +2,10 @@ import { auth0 } from "@/app/lib/auth0";
 import fs from "fs/promises";
 import path from "path";
 import FishEditor from "../FishEditor";
-import AddFishForm from "./AddFishForm"; // We will create this next
+import AddFishForm from "./AddFishForm";
+import { deleteFish } from "@/app/actions"; // Ensure this matches your export name
 
 export default async function AdminSettings() {
-  // Replace the path.join line with this:
   const dbPath = path.join(process.cwd(), "db.json");
   const fileData = await fs.readFile(dbPath, "utf-8").catch(() => "{}");
   const data = JSON.parse(fileData);
@@ -35,11 +35,30 @@ export default async function AdminSettings() {
 
         <div className="grid gap-4">
           {fullFishList.map((fish) => (
-            <FishEditor 
-              key={fish} 
-              name={fish} 
-              initialPrice={savedPrices[fish] || "10.00"} 
-            />
+            <div key={fish} className="relative group">
+              <FishEditor 
+                name={fish} 
+                initialPrice={savedPrices[fish] || "10.00"} 
+              />
+              
+              {/* Only allow deletion if the fish exists in the JSON data */}
+              {savedPrices[fish] && (
+                <form 
+                  action={async () => {
+                    "use server";
+                    await deleteFish(fish);
+                  }}
+                  className="absolute top-4 right-4"
+                >
+                  <button 
+                    type="submit"
+                    className="bg-zinc-800 hover:bg-red-600 text-zinc-500 hover:text-white px-2 py-1 rounded text-[10px] font-bold border border-zinc-700 hover:border-red-500 transition-all"
+                  >
+                    DELETE &gt;
+                  </button>
+                </form>
+              )}
+            </div>
           ))}
         </div>
       </div>
