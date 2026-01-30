@@ -6,6 +6,8 @@ import { revalidatePath } from "next/cache";
 import Stripe from "stripe";
 
 const dbPath = path.join(process.cwd(), "db.json");
+const ordersPath = path.join(process.cwd(), "orders.json");
+const settingsPath = path.join(process.cwd(), "settings.json");
 const tempstripe = process.env.STRIPE_SECRET_KEY;
 
 if (!tempstripe) {
@@ -90,13 +92,13 @@ export async function saveAccountSettings(formData: FormData) {
     theme: formData.get("theme"),
   };
 
-  const fileData = await fs.readFile(dbPath, "utf-8").catch(() => "{}");
+  const fileData = await fs.readFile(settingsPath, "utf-8").catch(() => "{}");
   const data = JSON.parse(fileData);
 
   // Save specific user profile settings
   data[`profile_${userId}`] = settings;
 
-  await fs.writeFile(dbPath, JSON.stringify(data, null, 2), "utf-8");
+  await fs.writeFile(settingsPath, JSON.stringify(data, null, 2), "utf-8");
   revalidatePath("/profile/settings");
 }
 
@@ -120,7 +122,7 @@ export async function createPaymentIntent(amount: number) {
 }
 
 export async function saveOrder(orderData: any) {
-  const fileData = await fs.readFile(dbPath, "utf-8");
+  const fileData = await fs.readFile(ordersPath, "utf-8");
   const db = JSON.parse(fileData);
 
   const newOrder = {
@@ -131,7 +133,7 @@ export async function saveOrder(orderData: any) {
   };
 
   db.orders = [newOrder, ...(db.orders || [])];
-  await fs.writeFile(dbPath, JSON.stringify(db, null, 2));
+  await fs.writeFile(ordersPath, JSON.stringify(db, null, 2));
   return newOrder;
 }
 
@@ -142,7 +144,7 @@ export async function createOrder(orderData: any) {
   if (!user?.sub) throw new Error("Unauthorized");
 
   try {
-    const fileContent = await fs.readFile(dbPath, "utf-8");
+    const fileContent = await fs.readFile(ordersPath, "utf-8");
     const data = JSON.parse(fileContent);
 
     // Create the new order object
@@ -160,7 +162,7 @@ export async function createOrder(orderData: any) {
     // Add new order to the start of the list
     data.orders.unshift(newOrder);
 
-    await fs.writeFile(dbPath, JSON.stringify(data, null, 2));
+    await fs.writeFile(ordersPath, JSON.stringify(data, null, 2));
     return { success: true, orderId: newOrder.id };
   } catch (error) {
     console.error("Failed to save order:", error);
