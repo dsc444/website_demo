@@ -39,7 +39,7 @@ export default async function GuestHome() {
             priority
           />
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 border border-zinc-200 px-2 py-1 rounded">
-            Guest Access
+            Oi! Login Fast!
           </span>
         </div>
 
@@ -80,9 +80,9 @@ export default async function GuestHome() {
           
           <a
             className="flex h-12 w-full items-center justify-center rounded-full border border-zinc-200 px-5 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900 md:w-[158px]"
-            href="https://nextjs.org/docs"
+            href="https://www.youtube.com/watch?v=Aq5WXmQQooo" 
           >
-            Inquiry
+            Don't click
           </a>
         </div>
 
