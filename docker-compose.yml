@@ -3,8 +3,8 @@ services:
     build: .
     volumes:
       - ./db.json:/app/db.json:rw
-      - ./data/orders.json:/app/data/orders.json:rw
-      - ./data/settings.json:/app/data/settings.json:rw
+      - ./orders.json:/app/data/orders.json:rw
+      - ./settings.json:/app/data/settings.json:rw
     ports:
       - "3000:3000"
     env_file:
