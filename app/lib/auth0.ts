@@ -8,7 +8,7 @@ export const auth0 = new Auth0Client({
   appBaseUrl: process.env.AUTH0_BASE_URL || process.env.APP_BASE_URL, 
   secret: process.env.AUTH0_SECRET,
 // 1. Rename and move this out of the routes object
-  postLogoutRedirectUri: '/', 
+  postLogoutRedirect: '/', 
 
   routes: {
     callback: '/api/auth/callback',
