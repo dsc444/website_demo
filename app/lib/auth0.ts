@@ -7,11 +7,12 @@ export const auth0 = new Auth0Client({
   // Make sure this variable name matches what is actually in your .env
   appBaseUrl: process.env.AUTH0_BASE_URL || process.env.APP_BASE_URL, 
   secret: process.env.AUTH0_SECRET,
-  
-  // ADD THIS BLOCK TO FIX THE REDIRECT PATH
+// 1. Rename and move this out of the routes object
+  postLogoutRedirectUri: '/', 
+
   routes: {
     callback: '/api/auth/callback',
-    postLogoutRedirect: '/'
+    // 2. ONLY keep callback and login here if needed
   },
 
   async beforeSessionSaved(session, idToken) {
