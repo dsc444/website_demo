@@ -3,7 +3,7 @@ import fs from "fs/promises";
 import path from "path";
 import FishEditor from "../FishEditor";
 import AddFishForm from "./AddFishForm";
-import { deleteFish } from "@/app/actions"; // Ensure this matches your export name
+import { deleteItem } from "@/app/actions"; // Ensure this matches your export name
 
 export default async function AdminSettings() {
   const dbPath = path.join(process.cwd(), "db.json");
@@ -46,7 +46,7 @@ export default async function AdminSettings() {
                 <form 
                   action={async () => {
                     "use server";
-                    await deleteFish(fish);
+                    await deleteItem(fish);
                   }}
                   className="absolute top-4 right-4"
                 >
