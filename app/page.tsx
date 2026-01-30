@@ -80,7 +80,7 @@ export default async function GuestHome() {
           
           <a
             className="flex h-12 w-full items-center justify-center rounded-full border border-zinc-200 px-5 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900 md:w-[158px]"
-            href="https://www.youtube.com/watch?v=Aq5WXmQQooo" 
+            href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" 
           >
             Don't click
           </a>

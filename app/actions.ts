@@ -4,11 +4,13 @@ import fs from "fs/promises";
 import path from "path";
 import { revalidatePath } from "next/cache";
 import Stripe from "stripe";
+import { Resend } from 'resend';
 
 const dbPath = path.join(process.cwd(), "db.json");
 const ordersPath = path.join(process.cwd(), "orders.json");
 const settingsPath = path.join(process.cwd(), "settings.json");
 const tempstripe = process.env.STRIPE_SECRET_KEY;
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 if (!tempstripe) {
   console.warn("⚠️ STRIPE_SECRET_KEY is missing from env variables.");
@@ -188,5 +190,47 @@ const dbPath = path.join(process.cwd(), "db.json");
     }
   } catch (error) {
     console.error("Failed to delete fish:", error);
+  }
+}
+
+export async function handleOrderSuccess(sessionId: string) {
+  if (!sessionId) return;
+
+  try {
+    // 1. Retrieve session from Stripe
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ['line_items', 'customer_details'],
+    });
+
+    const customerEmail = session.customer_details?.email;
+    const address = session.customer_details?.address;
+    const items = session.line_items?.data.map(item => item.description).join(", ");
+
+    // 2. Email to Customer
+    await resend.emails.send({
+      from: 'Orders <orders@darraghcollins.xyz>',
+      to: customerEmail!,
+      subject: 'Order Confirmed! 🚀',
+      html: `<h1>Thanks for your order!</h1><p>We are preparing your: ${items}</p>`
+    });
+
+    // 3. Email to Admin
+    await resend.emails.send({
+      from: 'System <system@darraghcollins.xyz>',
+      to: 'your-admin-email@gmail.com', // <--- CHANGE THIS
+      subject: `NEW ORDER: ${session.id}`,
+      html: `
+        <h2>New Order Received</h2>
+        <p><strong>Customer:</strong> ${customerEmail}</p>
+        <p><strong>Items:</strong> ${items}</p>
+        <p><strong>Address:</strong> ${JSON.stringify(address)}</p>
+        <p><strong>Stripe Ref:</strong> ${session.id}</p>
+      `
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Email processing error:", error);
+    return { error: "Failed to process emails" };
   }
 }
