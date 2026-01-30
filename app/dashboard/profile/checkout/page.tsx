@@ -51,7 +51,7 @@ export default function CheckoutPage() {
         </Link>
       </div>
 
-      <h1 className="text-4xl font-black italic tracking-tighter dark:text-white uppercase">Checkout</h1>
+      <h1 className="text-4xl font-black italic tracking-tighter dark:text-white uppercase">Checkout (just put 4242424242424242 for card)</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-10">
@@ -240,7 +240,7 @@ export default function CheckoutPage() {
 
             {paymentMethod === 'card' && isFormValid && (
               <p className="text-[9px] text-center text-zinc-400 uppercase font-black leading-tight">
-                Complete payment via the secure<br/>Stripe field on the left
+                Complete payment via the secure<br/>Stripe field on the left<br/>GIVE ME MONEY!
               </p>
             )}
           </div>

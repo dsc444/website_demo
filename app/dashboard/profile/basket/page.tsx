@@ -22,7 +22,7 @@ export default function BasketPage() {
         </Link>
       </div>
 
-      <h1 className="text-3xl font-black italic tracking-tighter dark:text-white uppercase">Your Basket</h1>
+      <h1 className="text-3xl font-black italic tracking-tighter dark:text-white uppercase">Y'our Basket</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">

@@ -32,10 +32,10 @@ export default async function CustomerDashboard() {
     <div className="space-y-8 p-6">
       <section className="flex flex-col gap-2">
         <h1 className="text-3xl font-serif text-zinc-900 dark:text-white">
-          Morning Catch, <span className="italic">{user?.given_name || "Partner"}</span>
+          Welcome, muhahahaha <span className="italic">{user?.given_name || "Partner"}</span>
         </h1>
         <p className="text-zinc-500 text-sm tracking-wide uppercase">
-          Live Market Rates — {new Date().toLocaleDateString()}
+          Care to purchase our wears?? — {new Date().toLocaleDateString()}
         </p>
       </section>
 
@@ -44,7 +44,7 @@ export default async function CustomerDashboard() {
 
       <div className="p-6 rounded-xl border border-zinc-200 bg-white dark:bg-zinc-950 dark:border-zinc-800 max-w-2xl">
         <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-tight mb-2">
-          Private Merchant Notes
+          If you write something here only you will be able to see it.
         </h3>
         <NoteForm initialNote={myNote} />
       </div>

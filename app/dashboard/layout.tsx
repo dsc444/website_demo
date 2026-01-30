@@ -26,7 +26,7 @@ export default async function DashboardLayout({
           <header className="h-16 border-b border-zinc-200 bg-white flex items-center justify-between px-8 dark:border-zinc-800 dark:bg-zinc-900/50">
             <div className="flex items-center gap-4">
                <span className="text-xs font-medium text-zinc-400 uppercase tracking-widest">
-                 Fin & Fillet Wholesaler
+                 Fine objects dealer. This is your basket -{">"}
                </span>
                {/* THE BASKET ICON GOES HERE */}
                <BasketIcon />

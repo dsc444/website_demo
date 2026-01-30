@@ -77,7 +77,7 @@ export default function SuccessPage() {
             <p className="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">Transaction Successful</p>
             <div className="h-1 w-12 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
             <p className="text-zinc-500 font-medium max-w-sm mx-auto leading-relaxed">
-              Your order is being processed. We’ve sent a digital receipt to your email address.
+              Your order is being processed. We’ve sent a digital receipt to your email address (no, we lied. Darragh hasn't built that yet).
             </p>
           </div>
         </div>
