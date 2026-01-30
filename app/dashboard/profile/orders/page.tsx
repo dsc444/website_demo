@@ -10,7 +10,7 @@ export default async function MyOrders() {
   let userOrders = [];
 
   try {
-    const dbPath = path.join(process.cwd(), "db.json");
+    const dbPath = path.join(process.cwd(), "orders.json");
     const fileContent = await fs.readFile(dbPath, "utf-8");
     const data = JSON.parse(fileContent);
 

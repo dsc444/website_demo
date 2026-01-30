@@ -5,7 +5,7 @@ import SettingsForm from "./SettingsForm"; // We'll create this next
 
 export default async function AccountSettingsPage() {
   const session = await auth0.getSession();
-  const dbPath = path.join(process.cwd(), "db.json");
+  const dbPath = path.join(process.cwd(), "settings.json");
   const fileData = await fs.readFile(dbPath, "utf-8").catch(() => "{}");
   const data = JSON.parse(fileData);
   
