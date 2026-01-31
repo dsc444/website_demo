@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useBasket } from "../../BasketContext";
-import { handleOrderSuccess } from "@/app/actions";
+import { handleOrderSuccess } from "@/app/actions/orders";
 
 export default function SuccessPage() {
   const { setBasket } = useBasket();

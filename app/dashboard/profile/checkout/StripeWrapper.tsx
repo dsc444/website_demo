@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 // Ensuring we use the central actions hub
-import { createPaymentIntent, createOrder } from "@/app/actions";
+import { createPaymentIntent, createOrder } from "@/app/actions/orders";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
