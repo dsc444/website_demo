@@ -18,13 +18,9 @@ export default function SuccessPage() {
     localStorage.setItem("user_basket", JSON.stringify([]));
 
     // 2. Trigger Email Action
-    if (sessionId) {
-      handleOrderSuccess(sessionId).finally(() => {
-        setIsProcessing(false);
-      });
-    } else {
-      setIsProcessing(false);
-    }
+    handleOrderSuccess().finally(() => {
+    setIsProcessing(false);
+  });
   }, [setBasket, sessionId]);
 
   return (

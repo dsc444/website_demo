@@ -23,7 +23,7 @@ export async function createPaymentIntent(amount: number) {
       currency: "eur",
       automatic_payment_methods: { enabled: true },
     });
-    return { clientSecret: paymentIntent.client_secret as string };
+    return { clientSecret: paymentIntent.client_secret as string};
   } catch (error) { 
     console.error("Stripe Intent Error:", error);
     throw new Error("Stripe Error"); 
@@ -59,43 +59,41 @@ export async function createOrder(orderData: any) {
   }
 }
 
-export async function handleOrderSuccess(sessionId: string) {
-  console.log("Searching for Session ID:", sessionId);
+export async function handleOrderSuccess() {
+  // 1. Identify who is logged in
+  const session = await auth0.getSession();
+  if (!session?.user) {
+    console.error("Unauthorized: No session found on success page");
+    return { success: false };
+  }
+
+  const userId = session.user.sub;
+  console.log("Searching for latest order for User:", userId);
   
   try {
-    const fileData = await fs.readFile(ORDERS_PATH, "utf-8");
-    const data = JSON.parse(fileData);
+    const data = await readOrdersFile();
+    const orders = data.orders || []; 
 
-    // 1. Access the "orders" array inside the object
-    const orders = data.orders; 
+    // 2. Find the LATEST order for this user (since unshift adds to front, it's orders[0])
+    const userOrder = orders.find((o: any) => o.userId === userId);
 
-    if (!Array.isArray(orders)) {
-      console.error("The 'orders' key is missing or not an array");
+    if (!userOrder) {
+      console.error("No order found in JSON for this user");
       return { success: false };
     }
 
-    // 2. Now .find() will work because 'orders' is an array
-    const order = orders.find((o: any) => 
-      o.paymentIntentId === sessionId || o.id === sessionId
-    );
+    // 3. Send the email
+    const customerEmail = userOrder.address.email;
+    const adminEmail = process.env.ADMIN_EMAIL;
 
-    if (!order) {
-      console.error("No matching order found for ID:", sessionId);
-      return { success: false };
-    }
-
-    // 3. Access the nested email: order -> address -> email
-    const customerEmail = order.address.email;
-    console.log("Success! Found email:", customerEmail);
-
-    // 4. Send the email via Resend
     await resend.emails.send({
       from: 'Orders <orders@darraghcollins.xyz>',
-      to: [customerEmail, process.env.ADMIN_EMAIL!],
+      to: adminEmail ? [customerEmail, adminEmail] : [customerEmail],
       subject: 'Order Confirmed! 🚀',
-      html: `<h1>Order Confirmed!</h1><p>Thanks ${order.address.firstName}, we got your order.</p>`
+      html: `<h1>Order Confirmed!</h1><p>Thanks ${userOrder.address.firstName}, your order ${userOrder.id} is being processed.</p>`
     });
 
+    console.log("Email sent to:", customerEmail);
     return { success: true };
   } catch (error) {
     console.error("Email Action Failed:", error);
