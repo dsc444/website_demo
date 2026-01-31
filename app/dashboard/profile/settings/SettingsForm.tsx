@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { saveAccountSettings } from "@/app/actions";
+import { saveAccountSettings } from "@/app/actions/users";
 
 export default function SettingsForm({ initialSettings }: { initialSettings: any }) {
   const [theme, setTheme] = useState(initialSettings.theme || "dark");
