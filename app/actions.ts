@@ -234,3 +234,32 @@ export async function handleOrderSuccess(sessionId: string) {
     return { error: "Failed to process emails" };
   }
 }
+
+export async function saveCookieConsent(consentData: any) {
+  try {
+    const filePath = path.join(process.cwd(), 'cookies.json');
+    
+    // 1. Read existing data or start with empty array
+    let currentData = [];
+    try {
+      const fileContent = await fs.readFile(filePath, 'utf8');
+      currentData = JSON.parse(fileContent);
+    } catch (e) {
+      currentData = [];
+    }
+
+    // 2. Add new consent entry with a timestamp
+    const newEntry = {
+      ...consentData,
+      timestamp: new Date().toISOString(),
+    };
+    currentData.push(newEntry);
+
+    // 3. Save back to the server
+    await fs.writeFile(filePath, JSON.stringify(currentData, null, 2));
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to save cookie consent:", error);
+    return { success: false };
+  }
+}

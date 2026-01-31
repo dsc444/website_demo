@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from 'next/link'; // Added this
+import Link from 'next/link';
 import "./globals.css";
+import CookieBanner from './components/CookieBanner'; 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,16 +34,19 @@ export default function RootLayout({
           transition-colors duration-300
         `}
       >
-        {/* Main content area - flex-1 ensures it pushes the footer down */}
+        {/* Main content area */}
         <main className="flex-1">
           {children}
         </main>
+
+        {/* COOKIE POPUP */}
+        <CookieBanner />
 
         {/* FOOTER SECTION */}
         <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 py-8">
           <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em]">
-              © {new Date().getFullYear()} Darragh's Dara Extravaganza. You better not sue me.
+              © {new Date().getFullYear()} Darragh's Data Extravaganza. You better not sue me.
             </p>
             
             <div className="flex gap-8">
