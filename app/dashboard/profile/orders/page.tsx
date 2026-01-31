@@ -1,6 +1,7 @@
 import { auth0 } from "@/app/lib/auth0";
 import fs from "fs/promises";
-import path from "path";
+//import path from "path";
+import { ORDERS_PATH } from "@/app/actions/config"; 
 import OrdersListClient from "./OrdersListClient";
 
 export default async function MyOrders() {
@@ -10,9 +11,9 @@ export default async function MyOrders() {
   let userOrders = [];
 
   try {
-    const dbPath = path.join(process.cwd(), "orders.json");
-    const fileContent = await fs.readFile(dbPath, "utf-8");
-    const data = JSON.parse(fileContent);
+    //const dbPath = path.join(process.cwd(), "orders.json");
+    const fileData = await fs.readFile(ORDERS_PATH, "utf-8").catch(() => "{}");
+    const data = JSON.parse(fileData);
 
     // Filter orders by user ID
     if (user?.sub && data.orders) {
