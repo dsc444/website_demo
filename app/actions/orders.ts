@@ -59,24 +59,46 @@ export async function createOrder(orderData: any) {
   }
 }
 
-export async function handleOrderSuccess(sessionId: string) {
+export async function handleOrderSuccess(orderId: string) {
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId, { 
-        expand: ['line_items', 'customer_details'] 
-    });
+    // 1. Get order data from your local JSON database on Hetzner
+    const fileData = await fs.readFile(ORDERS_PATH, "utf-8");
+    const orders = JSON.parse(fileData);
+    const order = orders.find((o: any) => o.id === orderId);
+
+    if (!order) throw new Error("Order not found");
+
+    // 2. Grab Admin Email from .env
+    const adminEmail = process.env.ADMIN_EMAIL;
     
-    const items = session.line_items?.data.map(i => i.description).join(", ");
-    
+    if (!adminEmail) {
+      console.warn("ADMIN_EMAIL is not defined in .env!");
+    }
+
+    // 3. Send to Customer
     await resend.emails.send({
       from: 'Orders <orders@darraghcollins.xyz>',
-      to: session.customer_details?.email!,
+      to: order.address.email, // Ensure your createOrder action saves the email here!
       subject: 'Order Confirmed! 🚀',
-      html: `<h1>Thanks!</h1><p>Items: ${items}</p>`
+      html: `<h1>Thanks for your order, ${order.address.firstName}!</h1>
+             <p>Total: €${order.total.toFixed(2)}</p>`
     });
+
+    // 4. Send to Admin (You)
+    if (adminEmail) {
+      await resend.emails.send({
+        from: 'System <orders@darraghcollins.xyz>',
+        to: adminEmail,
+        subject: '💰 New Order Received!',
+        html: `<p>New order #${order.id} from ${order.address.firstName} ${order.address.surname}</p>
+               <p>Amount: €${order.total}</p>
+               <p>Email: ${order.address.email}</p>`
+      });
+    }
 
     return { success: true };
   } catch (error) {
     console.error("Post-Order Email Error:", error);
-    return { success: false, error: "Failed to send confirmation" };
+    return { success: false };
   }
 }

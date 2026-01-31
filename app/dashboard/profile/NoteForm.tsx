@@ -27,7 +27,7 @@ export default function NoteForm({ initialNote }: { initialNote: string }) {
         name="note"
         value={note}
         onChange={(e) => setNote(e.target.value)}
-        placeholder="e.g. Remember to ask about the fresh Halibut..."
+        placeholder="e.g. put your insults here"
         className="w-full min-h-[100px] rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-100"
       />
       <button

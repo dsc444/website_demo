@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-// 1. Centralized action import
 import { addNewFish } from "@/app/actions";
 
 export default function AddFishForm() {

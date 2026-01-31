@@ -1,6 +1,5 @@
 import { auth0 } from "@/app/lib/auth0";
 import fs from "fs/promises";
-// 1. Import the correct path from your config
 import { SETTINGS_PATH } from "@/app/actions/config";
 import SettingsForm from "./SettingsForm";
 
