@@ -20,11 +20,19 @@ export async function updateFishPrice(fishName: string, newPrice: string) {
   if (!session?.user) throw new Error("Unauthorized");
 
   try {
-    await fs.mkdir(DATA_DIR, { recursive: true });
     const data = await readDbFile();
-
     if (!data.prices) data.prices = {};
-    data.prices[fishName] = newPrice;
+
+    // FIX: Maintain the object structure so we don't lose the image path
+    if (data.prices[fishName] && typeof data.prices[fishName] === "object") {
+      data.prices[fishName] = {
+        ...data.prices[fishName],
+        price: newPrice,
+      };
+    } else {
+      // Fallback for old data or new entries
+      data.prices[fishName] = { price: newPrice, image: "" };
+    }
 
     await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2));
     revalidatePath("/admin/settings");
