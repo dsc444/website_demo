@@ -2,9 +2,7 @@ services:
   nextjs-app:
     build: .
     volumes:
-      - ./db.json:/app/db.json:rw
-      - ./orders.json:/app/data/orders.json:rw
-      - ./settings.json:/app/data/settings.json:rw
+      - ./data:/app/data:rw
     ports:
       - "3000:3000"
     env_file:
