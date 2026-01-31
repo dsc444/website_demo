@@ -60,32 +60,42 @@ export async function createOrder(orderData: any) {
 }
 
 export async function handleOrderSuccess(sessionId: string) {
-  console.log("Searching for Session ID:", sessionId); // This will show in Docker logs
+  console.log("Searching for Session ID:", sessionId);
   
   try {
     const fileData = await fs.readFile(ORDERS_PATH, "utf-8");
-    const orders = JSON.parse(fileData);
+    const data = JSON.parse(fileData);
 
-    // Look for the order where the sessionId matches
-    // NOTE: Ensure your 'createOrder' action actually saves 'sessionId' into the JSON!
-    const order = orders.find((o: any) => o.sessionId === sessionId);
+    // 1. Access the "orders" array inside the object
+    const orders = data.orders; 
 
-    if (!order) {
-      console.error("Order not found in JSON for session:", sessionId);
+    if (!Array.isArray(orders)) {
+      console.error("The 'orders' key is missing or not an array");
       return { success: false };
     }
 
-    // ONLY RUNS IF ORDER IS FOUND
-    const adminEmail = process.env.ADMIN_EMAIL;
+    // 2. Now .find() will work because 'orders' is an array
+    const order = orders.find((o: any) => 
+      o.paymentIntentId === sessionId || o.id === sessionId
+    );
 
+    if (!order) {
+      console.error("No matching order found for ID:", sessionId);
+      return { success: false };
+    }
+
+    // 3. Access the nested email: order -> address -> email
+    const customerEmail = order.address.email;
+    console.log("Success! Found email:", customerEmail);
+
+    // 4. Send the email via Resend
     await resend.emails.send({
       from: 'Orders <orders@darraghcollins.xyz>',
-      to: [order.address.email, adminEmail!], // Sending to both at once
+      to: [customerEmail, process.env.ADMIN_EMAIL!],
       subject: 'Order Confirmed! 🚀',
-      html: `<h1>Thanks ${order.address.firstName}!</h1><p>Order Total: €${order.total}</p>`
+      html: `<h1>Order Confirmed!</h1><p>Thanks ${order.address.firstName}, we got your order.</p>`
     });
 
-    console.log("Email sent successfully via Resend");
     return { success: true };
   } catch (error) {
     console.error("Email Action Failed:", error);
