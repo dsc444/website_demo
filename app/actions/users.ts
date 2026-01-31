@@ -18,8 +18,11 @@ export async function saveAccountSettings(formData: FormData) {
   if (!session?.user) return;
   const settings = {
     fullName: formData.get("fullName"),
+    workplace: formData.get("workplace"),
+    address: formData.get("address"),
+    emailList: formData.get("emailList") === "on",
+    phoneAlerts: formData.get("phoneAlerts") === "on",
     theme: formData.get("theme"),
-    // ... add other fields here
   };
   const data = JSON.parse(await fs.readFile(SETTINGS_PATH, "utf-8").catch(() => "{}"));
   data[`profile_${session.user.sub}`] = settings;
