@@ -8,7 +8,7 @@ import { handleOrderSuccess } from "@/app/actions/orders";
 export default function SuccessPage() {
   const { setBasket } = useBasket();
   const searchParams = useSearchParams();
-  const sessionId = searchParams.get("session_id");
+  const sessionId = searchParams.get("payment_intent");
   const [isProcessing, setIsProcessing] = useState(true);
 
   useEffect(() => {
