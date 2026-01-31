@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from 'next/link'; // Added this
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,22 +23,44 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // 1. REMOVED className="dark" from here so the JS can control it
     <html lang="en"> 
       <body 
         className={`
           ${geistSans.variable} ${geistMono.variable} antialiased 
-          flex min-h-screen
-          /* 2. UPDATED these to be theme-aware */
+          flex flex-col min-h-screen
           bg-white text-zinc-900 
           dark:bg-zinc-950 dark:text-white
           transition-colors duration-300
         `}
       >
-        {/* Main content area */}
-        <main className="flex-1 overflow-y-auto">
+        {/* Main content area - flex-1 ensures it pushes the footer down */}
+        <main className="flex-1">
           {children}
         </main>
+
+        {/* FOOTER SECTION */}
+        <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 py-8">
+          <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em]">
+              © {new Date().getFullYear()} Darragh's Dara Extravaganza. You better not sue me.
+            </p>
+            
+            <div className="flex gap-8">
+              <Link 
+                href="/privacy" 
+                className="text-zinc-400 hover:text-emerald-500 text-[10px] font-black uppercase tracking-widest transition-all"
+              >
+                Privacy Policy
+              </Link>
+              <Link 
+                href="/terms" 
+                className="text-zinc-400 hover:text-emerald-500 text-[10px] font-black uppercase tracking-widest transition-all"
+              >
+                Terms of Service
+              </Link>
+            </div>
+          </div>
+        </footer>
       </body>
     </html>
   );
