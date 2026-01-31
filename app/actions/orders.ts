@@ -135,7 +135,7 @@ export async function handleOrderSuccess() {
               </div>
 
               <div style="text-align: center; margin-top: 50px;">
-                <a href="https://darraghcollins.xyz/dashboard/profile" style="background-color: #ffffff; color: #000000; padding: 15px 40px; border-radius: 15px; text-decoration: none; font-weight: 900; font-size: 14px; display: inline-block;">
+                <a href="https://darraghcollins.xyz/dashboard/profile/orders" style="background-color: #ffffff; color: #000000; padding: 15px 40px; border-radius: 15px; text-decoration: none; font-weight: 900; font-size: 14px; display: inline-block;">
                   VIEW ORDER STATUS
                 </a>
               </div>

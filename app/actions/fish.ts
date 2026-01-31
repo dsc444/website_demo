@@ -1,8 +1,9 @@
 "use server";
 import { auth0 } from "@/app/lib/auth0";
 import fs from "fs/promises";
+import path from "path";
 import { revalidatePath } from "next/cache";
-import { DATA_DIR, DB_PATH } from "./config";
+import { DATA_DIR, DB_PATH, IMAGE_DIR } from "./config";
 
 // Shared helper to prevent JSON.parse crashes on empty/missing files
 async function readDbFile() {
@@ -35,26 +36,51 @@ export async function updateFishPrice(fishName: string, newPrice: string) {
   }
 }
 
-export async function addNewFish(name: string, price: string) {
+export async function addNewFish(formData: FormData) {
   const session = await auth0.getSession();
   if (!session?.user) throw new Error("Unauthorized");
 
-  try {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-    const data = await readDbFile();
+  const name = formData.get("name") as string;
+  const price = formData.get("price") as string;
+  const image = formData.get("image") as File; // The PNG from the form
 
-    if (!data.prices) data.prices = {};
-    // Only add if it doesn't exist
-    if (!data.prices[name]) {
-      data.prices[name] = price;
+  try {
+    // 1. Ensure directories exist
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    await fs.mkdir(IMAGE_DIR, { recursive: true });
+
+    // 2. Handle the Image Upload
+    let imagePath = "";
+    if (image && image.size > 0) {
+      const bytes = await image.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      
+      // Create a clean filename (e.g., "Gold Fish" -> "gold-fish.png")
+      const fileName = `${name.toLowerCase().replace(/\s+/g, "-")}.png`;
+      const filePath = path.join(IMAGE_DIR, fileName);
+      
+      await fs.writeFile(filePath, buffer);
+      imagePath = `/images/${fileName}`; // The URL path for your <img> tags
     }
 
+    // 3. Update the JSON Database
+    const data = await readDbFile();
+    if (!data.prices) data.prices = {};
+    
+    // Store price AND the new image path
+    data.prices[name] = {
+      price: price,
+      image: imagePath
+    };
+
     await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2));
+    
     revalidatePath("/admin/settings");
+    revalidatePath("/");
     return { success: true };
   } catch (error) {
     console.error("Add Fish Failed:", error);
-    return { success: false, error: "Could not add fish" };
+    return { success: false, error: "Could not add fish or upload image" };
   }
 }
 
