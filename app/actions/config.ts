@@ -12,7 +12,7 @@ export const COOKIES_PATH = path.join(DATA_DIR, "cookies.json");
 // STRIPE
 const stripeKey = process.env.STRIPE_SECRET_KEY || "";
 export const stripe = new Stripe(stripeKey, {
-  apiVersion: "2026-01-28.clover" as any,
+  apiVersion: "2025-12-15.acacia" as any,
   typescript: true,
 });
 
