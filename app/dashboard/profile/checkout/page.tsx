@@ -17,6 +17,7 @@ export default function CheckoutPage() {
     city: "",
     county: "",
     eircode: "",
+    email: ""
   });
 
   // 2. Validation Check: Ensure all keys have a non-empty value
@@ -136,7 +137,7 @@ export default function CheckoutPage() {
                 <input name="eircode" value={formData.eircode} onChange={handleInputChange} required placeholder="D01 X123" className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-3 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all dark:text-white" />
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Phone (Optional)</label>
+                <label className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Email ()</label>
                 <input className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-3 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all dark:text-white" />
               </div>
             </div>
