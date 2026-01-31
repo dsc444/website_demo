@@ -3,6 +3,7 @@ services:
     build: .
     volumes:
       - ./data:/app/data:rw
+      - /var/www/shop_assets:/var/www/shop_assets
     ports:
       - "3000:3000"
     env_file:
