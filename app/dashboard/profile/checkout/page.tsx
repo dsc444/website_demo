@@ -138,7 +138,7 @@ export default function CheckoutPage() {
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Email ()</label>
-                <input className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-3 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all dark:text-white" />
+                <input name="email" value={formData.email} onChange={handleInputChange} required placeholder="086 1234567" className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-3 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all dark:text-white" />
               </div>
             </div>
           </section>
