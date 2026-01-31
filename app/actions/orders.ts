@@ -59,46 +59,36 @@ export async function createOrder(orderData: any) {
   }
 }
 
-export async function handleOrderSuccess(orderId: string) {
+export async function handleOrderSuccess(sessionId: string) {
+  console.log("Searching for Session ID:", sessionId); // This will show in Docker logs
+  
   try {
-    // 1. Get order data from your local JSON database on Hetzner
     const fileData = await fs.readFile(ORDERS_PATH, "utf-8");
     const orders = JSON.parse(fileData);
-    const order = orders.find((o: any) => o.id === orderId);
 
-    if (!order) throw new Error("Order not found");
+    // Look for the order where the sessionId matches
+    // NOTE: Ensure your 'createOrder' action actually saves 'sessionId' into the JSON!
+    const order = orders.find((o: any) => o.sessionId === sessionId);
 
-    // 2. Grab Admin Email from .env
-    const adminEmail = process.env.ADMIN_EMAIL;
-    
-    if (!adminEmail) {
-      console.warn("ADMIN_EMAIL is not defined in .env!");
+    if (!order) {
+      console.error("Order not found in JSON for session:", sessionId);
+      return { success: false };
     }
 
-    // 3. Send to Customer
+    // ONLY RUNS IF ORDER IS FOUND
+    const adminEmail = process.env.ADMIN_EMAIL;
+
     await resend.emails.send({
       from: 'Orders <orders@darraghcollins.xyz>',
-      to: order.address.email, // Ensure your createOrder action saves the email here!
+      to: [order.address.email, adminEmail!], // Sending to both at once
       subject: 'Order Confirmed! 🚀',
-      html: `<h1>Thanks for your order, ${order.address.firstName}!</h1>
-             <p>Total: €${order.total.toFixed(2)}</p>`
+      html: `<h1>Thanks ${order.address.firstName}!</h1><p>Order Total: €${order.total}</p>`
     });
 
-    // 4. Send to Admin (You)
-    if (adminEmail) {
-      await resend.emails.send({
-        from: 'System <orders@darraghcollins.xyz>',
-        to: adminEmail,
-        subject: '💰 New Order Received!',
-        html: `<p>New order #${order.id} from ${order.address.firstName} ${order.address.surname}</p>
-               <p>Amount: €${order.total}</p>
-               <p>Email: ${order.address.email}</p>`
-      });
-    }
-
+    console.log("Email sent successfully via Resend");
     return { success: true };
   } catch (error) {
-    console.error("Post-Order Email Error:", error);
+    console.error("Email Action Failed:", error);
     return { success: false };
   }
 }
