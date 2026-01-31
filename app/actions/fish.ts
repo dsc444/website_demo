@@ -28,8 +28,10 @@ export async function updateFishPrice(fishName: string, newPrice: string) {
     await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2));
     revalidatePath("/admin/settings");
     revalidatePath("/");
+    return { success: true };
   } catch (error) { 
     console.error("Price Update Failed:", error); 
+    return { success: false, error: "Failed to write to disk" };
   }
 }
 
@@ -49,8 +51,10 @@ export async function addNewFish(name: string, price: string) {
 
     await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2));
     revalidatePath("/admin/settings");
+    return { success: true };
   } catch (error) {
     console.error("Add Fish Failed:", error);
+    return { success: false, error: "Could not add fish" };
   }
 }
 
@@ -67,7 +71,9 @@ export async function deleteItem(id: string) {
       await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2));
       revalidatePath("/admin/settings");
     }
+    return { success: true };
   } catch (error) { 
     console.error("Delete Failed:", error); 
+    return { success: false, error: "Could not remove fish" };
   }
 }
