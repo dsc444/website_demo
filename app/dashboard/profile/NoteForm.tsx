@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+// 1. Ensure this points to your barrel export in actions/index.ts
 import { saveUserNote } from "@/app/actions";
 
 export default function NoteForm({ initialNote }: { initialNote: string }) {
@@ -9,9 +10,15 @@ export default function NoteForm({ initialNote }: { initialNote: string }) {
 
   async function handleSubmit(formData: FormData) {
     setIsSaving(true);
-    await saveUserNote(formData);
-    setIsSaving(false);
-    // We don't clear the 'note' state here, so the text stays visible!
+    try {
+      await saveUserNote(formData);
+      // Optional: You could add a "Saved!" toast here
+    } catch (error) {
+      console.error("Failed to save note:", error);
+      alert("Failed to save note. Please check if the server data folder is writable.");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (

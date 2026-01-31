@@ -1,16 +1,14 @@
 import { auth0 } from "@/app/lib/auth0";
 import fs from "fs/promises";
-import path from "path";
-import SettingsForm from "./SettingsForm"; // We'll create this next
+// 1. Import the correct path from your config
+import { SETTINGS_PATH } from "@/app/actions/config";
+import SettingsForm from "./SettingsForm";
 
 export default async function AccountSettingsPage() {
   const session = await auth0.getSession();
-  const dbPath = path.join(process.cwd(), "settings.json");
-  const fileData = await fs.readFile(dbPath, "utf-8").catch(() => "{}");
-  const data = JSON.parse(fileData);
   
-  // Get existing settings or default to empty
-  const initialSettings = data[`profile_${session?.user.sub}`] || {
+  // 2. Safe read from the central DATA_DIR path
+  let initialSettings = {
     fullName: "",
     workplace: "",
     address: "",
@@ -18,6 +16,22 @@ export default async function AccountSettingsPage() {
     phoneAlerts: false,
     theme: "dark"
   };
+
+  try {
+    const fileData = await fs.readFile(SETTINGS_PATH, "utf-8");
+    // Ensure we don't parse empty files created by 'touch'
+    const data = fileData.trim() ? JSON.parse(fileData) : {};
+    
+    if (session?.user?.sub) {
+      const userSettings = data[`profile_${session.user.sub}`];
+      if (userSettings) {
+        initialSettings = userSettings;
+      }
+    }
+  } catch (error) {
+    // If file doesn't exist yet, we just use the defaults above
+    console.log("No settings.json found yet, using defaults.");
+  }
 
   return (
     <div className="p-8 max-w-2xl">

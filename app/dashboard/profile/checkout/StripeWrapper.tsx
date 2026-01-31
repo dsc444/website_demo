@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+// Ensuring we use the central actions hub
 import { createPaymentIntent, createOrder } from "@/app/actions";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-// --- 1. THE CHECKOUT FORM COMPONENT ---
 function CheckoutForm({ total, basket, formData }: { total: number, basket: any[], formData: any }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -16,15 +16,11 @@ function CheckoutForm({ total, basket, formData }: { total: number, basket: any[
 
   const handlePay = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!stripe || !elements) {
-      return;
-    }
+    if (!stripe || !elements) return;
 
     setLoading(true);
     setErrorMessage(null);
 
-    // Trigger form validation in Stripe Elements
     const { error: submitError } = await elements.submit();
     if (submitError) {
       setErrorMessage(submitError.message ?? "Validation failed");
@@ -33,27 +29,26 @@ function CheckoutForm({ total, basket, formData }: { total: number, basket: any[
     }
 
     try {
-      // --- SAVE TO DATABASE BEFORE REDIRECT ---
-      // We explicitly map the data here to ensure db.json gets everything
+      // 1. Prepare Payload
       const orderPayload = {
         items: basket,
         total: total,
-        address: formData, // Contains firstName, surname, street, city, etc.
+        address: formData,
         subtotal: total - 6.00,
         shipping: 6.00,
-        cardLast4: "4242", // Placeholder (Stripe hides real last4 until payment is processed)
+        cardLast4: "4242", 
       };
 
-      console.log("Attempting to save order to DB:", orderPayload);
-      
+      // 2. SAVE TO JSON (Hetzner /data/orders.json)
+      // This calls our modularized createOrder which handles mkdir and safe-parsing
       const response = await createOrder(orderPayload);
       
       if (!response.success) {
-        throw new Error("Failed to record order in database.");
+        // If this fails, it's likely a permission/folder issue on the server
+        throw new Error("Could not initialize order on server. Please try again.");
       }
 
-      // --- PROCEED TO STRIPE PAYMENT ---
-      // This will redirect the user to the success page
+      // 3. PROCEED TO STRIPE
       const { error } = await stripe.confirmPayment({
         elements,
         confirmParams: {
@@ -66,6 +61,7 @@ function CheckoutForm({ total, basket, formData }: { total: number, basket: any[
       }
     } catch (err: any) {
       console.error("Checkout Error:", err);
+      // We show the specific error so you can see if it's a "File System" error
       setErrorMessage(err.message ?? "An error occurred during checkout.");
     } finally {
       setLoading(false);
@@ -73,7 +69,7 @@ function CheckoutForm({ total, basket, formData }: { total: number, basket: any[
   };
 
   return (
-    <form onSubmit={handlePay} className="space-y-4 pt-4 animate-in fade-in slide-in-from-top-4 duration-500">
+    <form onSubmit={handlePay} className="space-y-4 pt-4 animate-in fade-in slide-in-from-top-4">
       <PaymentElement options={{ layout: "tabs" }} />
       
       {errorMessage && (
@@ -85,9 +81,9 @@ function CheckoutForm({ total, basket, formData }: { total: number, basket: any[
       <button
         type="submit"
         disabled={loading || !stripe}
-        className="w-full bg-emerald-500 text-white font-black py-4 rounded-xl hover:bg-emerald-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        className="w-full bg-emerald-500 text-white font-black py-4 rounded-xl hover:bg-emerald-400 transition-all disabled:opacity-50"
       >
-        {loading ? "PROCESSING..." : `PAY $${total.toFixed(2)} SECURELY`}
+        {loading ? "PROCESSING..." : `PAY €${total.toFixed(2)} SECURELY`}
       </button>
     </form>
   );

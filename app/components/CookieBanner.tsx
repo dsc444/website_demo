@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+// 1. Point to your central actions hub
 import { saveCookieConsent } from '@/app/actions';
 
 export default function CookieBanner() {
@@ -11,20 +12,28 @@ export default function CookieBanner() {
   });
 
   useEffect(() => {
+    // Check if user already made a choice
     const consent = localStorage.getItem('cookie-consent');
-    if (!consent) setIsVisible(true);
+    if (!consent) {
+      // Small delay for better UX
+      const timer = setTimeout(() => setIsVisible(true), 1000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
-  // Master function to handle all button clicks
   const processChoice = async (finalConsent: typeof selections) => {
-    // 1. Save locally so the banner disappears for this user
+    // 1. Save locally IMMEDIATELY so the UI feels responsive
     localStorage.setItem('cookie-consent', JSON.stringify(finalConsent));
-    
-    // 2. SAVE TO SERVER JSON (via your Server Action)
-    await saveCookieConsent(finalConsent);
-    
-    // 3. Close the banner
     setIsVisible(false);
+    
+    // 2. SAVE TO SERVER JSON
+    try {
+      await saveCookieConsent(finalConsent);
+    } catch (error) {
+      // We log this but don't show the user an error 
+      // because we don't want to stop them from using the site
+      console.error("Cookie consent could not be logged to server:", error);
+    }
   };
 
   const onAcceptAll = () => {
@@ -51,21 +60,22 @@ export default function CookieBanner() {
 
       {/* Selection Toggles */}
       <div className="space-y-3 mb-6">
+        {/* ... Toggles remain the same ... */}
         <div className="flex items-center justify-between p-2 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg">
-          <label className="text-[10px] font-bold uppercase text-zinc-400">Necessary (Auth/Security)</label>
+          <label className="text-[10px] font-bold uppercase text-zinc-400">Necessary</label>
           <span className="text-[9px] font-black text-emerald-500 uppercase">Always On</span>
         </div>
 
         <div className="flex items-center justify-between p-2 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 rounded-lg transition-colors cursor-pointer" 
              onClick={() => setSelections({...selections, analytics: !selections.analytics})}>
           <label className="text-[10px] font-bold uppercase cursor-pointer">Analytics</label>
-          <input type="checkbox" checked={selections.analytics} readOnly className="accent-emerald-500 h-3 w-3" />
+          <input type="checkbox" checked={selections.analytics} readOnly className="accent-emerald-500 h-3 w-3 cursor-pointer" />
         </div>
 
         <div className="flex items-center justify-between p-2 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 rounded-lg transition-colors cursor-pointer"
              onClick={() => setSelections({...selections, marketing: !selections.marketing})}>
           <label className="text-[10px] font-bold uppercase cursor-pointer">Marketing</label>
-          <input type="checkbox" checked={selections.marketing} readOnly className="accent-emerald-500 h-3 w-3" />
+          <input type="checkbox" checked={selections.marketing} readOnly className="accent-emerald-500 h-3 w-3 cursor-pointer" />
         </div>
       </div>
       
