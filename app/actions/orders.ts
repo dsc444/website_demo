@@ -87,7 +87,7 @@ export async function handleOrderSuccess() {
     const adminEmail = process.env.ADMIN_EMAIL;
 
     await resend.emails.send({
-      from: 'Orders <orders@darraghcollins.xyz>',
+      from: 'Orders <orders@orders.darraghcollins.xyz>',
       to: adminEmail ? [customerEmail, adminEmail] : [customerEmail],
       subject: 'Order Confirmed! 🚀',
       html: `<h1>Order Confirmed!</h1><p>Thanks ${userOrder.address.firstName}, your order ${userOrder.id} is being processed.</p>`
