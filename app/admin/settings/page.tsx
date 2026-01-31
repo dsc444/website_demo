@@ -1,13 +1,15 @@
 import { auth0 } from "@/app/lib/auth0";
 import fs from "fs/promises";
-import path from "path";
+//import path from "path";
 import FishEditor from "../FishEditor";
 import AddFishForm from "./AddFishForm";
+import { DB_PATH } from "@/app/actions/config"; 
 import { deleteItem } from "@/app/actions"; // Ensure this matches your export name
 
 export default async function AdminSettings() {
-  const dbPath = path.join(process.cwd(), "db.json");
-  const fileData = await fs.readFile(dbPath, "utf-8").catch(() => "{}");
+  //const dbPath = path.join(process.cwd(), "db.json");
+  //const fileData = await fs.readFile(dbPath, "utf-8").catch(() => "{}");\
+  const fileData = await fs.readFile(DB_PATH, "utf-8").catch(() => "{}");
   const data = JSON.parse(fileData);
   const savedPrices = data.prices || {};
 
