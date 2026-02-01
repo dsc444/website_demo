@@ -9,8 +9,34 @@ import { DATA_DIR, DB_PATH, IMAGE_DIR } from "./config";
 async function readDbFile() {
   try {
     const content = await fs.readFile(DB_PATH, "utf-8");
-    return content.trim() ? JSON.parse(content) : { prices: {} };
-  } catch {
+    const data = content.trim() ? JSON.parse(content) : { prices: {} };
+
+    // We create a clean version of the prices object
+    const normalizedPrices: Record<string, { price: string; image: string }> = {};
+
+    if (data.prices) {
+      Object.keys(data.prices).forEach((name) => {
+        const entry = data.prices[name];
+
+        if (entry && typeof entry === "object" && "price" in entry) {
+          // 1. It's already the NEW format { price: "1.00", image: "..." }
+          normalizedPrices[name] = {
+            price: String(entry.price || "0.00"),
+            image: String(entry.image || ""),
+          };
+        } else {
+          // 2. It's the OLD format (just a string or number)
+          // We convert it to the new format so the frontend doesn't crash
+          normalizedPrices[name] = {
+            price: String(entry || "0.00"),
+            image: "",
+          };
+        }
+      });
+    }
+
+    return { prices: normalizedPrices };
+  } catch (error) {
     return { prices: {} };
   }
 }
