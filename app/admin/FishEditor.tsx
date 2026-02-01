@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-// 1. Point to your centralized actions
+import { useState, useEffect } from "react";// 1. Point to your centralized actions
 import { updateFishPrice } from "@/app/actions";
 
 export default function FishEditor({ 
