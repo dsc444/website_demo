@@ -4,16 +4,36 @@ import { useState } from "react";
 // 1. Point to your centralized actions
 import { updateFishPrice } from "@/app/actions";
 
-export default function FishEditor({ name, initialPrice }: { name: string, initialPrice: string }) {
-  // Use the initialPrice prop, but manage local state for the input
-  const [price, setPrice] = useState(parseFloat(initialPrice));
+export default function FishEditor({ 
+  name, 
+  initialPrice 
+}: { 
+  name: string, 
+  initialPrice: any // We'll handle the type extraction inside
+}) {
+  
+  // 2. Extract the price value safely
+  const getInitialValue = () => {
+    if (typeof initialPrice === "object" && initialPrice !== null) {
+      return parseFloat(initialPrice.price) || 0;
+    }
+    return parseFloat(initialPrice) || 0;
+  };
+
+  const [price, setPrice] = useState(getInitialValue());
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<string | null>(null);
+
+  // Sync state if initialPrice changes (important for Next.js revalidation)
+  useEffect(() => {
+    setPrice(getInitialValue());
+  }, [initialPrice]);
 
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      // 2. Call the server action that writes to DB_PATH in /app/data
+      // 3. updateFishPrice now receives the string "1.10"
+      // Our server action logic already handles merging this with the image path!
       const result = await updateFishPrice(name, price.toFixed(2));
       
       if (result.success) {
@@ -23,7 +43,7 @@ export default function FishEditor({ name, initialPrice }: { name: string, initi
       }
     } catch (err) {
       console.error("Fish Update Failed:", err);
-      alert("Error: Could not update price on server. Check Docker logs.");
+      alert("Error: Could not update price.");
     } finally {
       setIsSaving(false);
     }
